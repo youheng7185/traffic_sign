@@ -57,6 +57,8 @@ USB_OTG_FS	Device_Only	USB_OTG_FS_DP	PA12
 
 
 Pin Nb	PINs	FUNCTIONs	LABELs
+1	PE2	GPIO_Output	cam_ret
+2	PE3	GPIO_Output	cam_pwdn
 3	PE4	DCMI_D4	
 4	PE5	DCMI_D6	
 5	PE6	DCMI_D7	
@@ -158,6 +160,8 @@ USB_OTG_FS	Device_Only	USB_OTG_FS_DP	PA12
 
 
 Pin Nb	PINs	FUNCTIONs	LABELs
+1	PE2	GPIO_Output	cam_ret
+2	PE3	GPIO_Output	cam_pwdn
 3	PE4	DCMI_D4	
 4	PE5	DCMI_D6	
 5	PE6	DCMI_D7	
