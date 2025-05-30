@@ -207,7 +207,9 @@ void ST7789_Fill_Color(uint16_t color)
 	#ifdef USE_DMA
 		for (i = 0; i < ST7789_HEIGHT / HOR_LEN; i++)
 		{
-			memset(disp_buf, color, sizeof(disp_buf));
+			for (int i = 0; i < sizeof(disp_buf)/sizeof(uint16_t); i++) {
+			    disp_buf[i] = color;
+			}
 			ST7789_WriteData(disp_buf, sizeof(disp_buf));
 		}
 	#else
