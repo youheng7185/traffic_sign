@@ -47,6 +47,7 @@
 
 SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi2;
+DMA_HandleTypeDef hdma_spi1_tx;
 
 TIM_HandleTypeDef htim1;
 
@@ -60,6 +61,7 @@ UART_HandleTypeDef huart4;
 void SystemClock_Config(void);
 void PeriphCommonClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_UART4_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_SPI1_Init(void);
@@ -138,6 +140,7 @@ Error_Handler();
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_UART4_Init();
   MX_TIM1_Init();
   MX_SPI1_Init();
@@ -516,6 +519,22 @@ static void MX_UART4_Init(void)
 }
 
 /**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Stream0_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -537,7 +556,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOG_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, cam_ret_Pin|cam_pwdn_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, CAMERA_RESET_Pin|cam_pwdn_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(touch_cs_GPIO_Port, touch_cs_Pin, GPIO_PIN_RESET);
@@ -545,8 +564,8 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, lcd_cs_Pin|lcd_rst_Pin|lcd_dc_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : cam_ret_Pin cam_pwdn_Pin */
-  GPIO_InitStruct.Pin = cam_ret_Pin|cam_pwdn_Pin;
+  /*Configure GPIO pins : CAMERA_RESET_Pin cam_pwdn_Pin */
+  GPIO_InitStruct.Pin = CAMERA_RESET_Pin|cam_pwdn_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

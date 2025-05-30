@@ -1,5 +1,7 @@
 #include "st7789.h"
 
+#define USE_DMA 1
+
 #ifdef USE_DMA
 #include <string.h>
 uint16_t DMA_MIN_SIZE = 16;

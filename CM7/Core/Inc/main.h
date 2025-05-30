@@ -59,8 +59,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define cam_ret_Pin GPIO_PIN_2
-#define cam_ret_GPIO_Port GPIOE
+#define CAMERA_RESET_Pin GPIO_PIN_2
+#define CAMERA_RESET_GPIO_Port GPIOE
 #define cam_pwdn_Pin GPIO_PIN_3
 #define cam_pwdn_GPIO_Port GPIOE
 #define touch_irq_Pin GPIO_PIN_0
