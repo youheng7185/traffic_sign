@@ -9,7 +9,7 @@
 extern SPI_HandleTypeDef ST7789_SPI_PORT;
 
 /* choose whether use DMA or not */
-// #define USE_DMA
+//#define USE_DMA
 
 /* If u need CS control, comment below*/
 //#define CFG_NO_CS
@@ -137,7 +137,7 @@ extern SPI_HandleTypeDef ST7789_SPI_PORT;
 #ifdef USING_240X320
 
 	#if ST7789_ROTATION == 0
-        #define ST7789_WIDTH 240
+        #define ST7789_WIDTH 170
         #define ST7789_HEIGHT 320
         #define X_SHIFT 35
         #define Y_SHIFT 0
@@ -151,7 +151,7 @@ extern SPI_HandleTypeDef ST7789_SPI_PORT;
     #endif
 
     #if ST7789_ROTATION == 2
-        #define ST7789_WIDTH 240
+        #define ST7789_WIDTH 170
         #define ST7789_HEIGHT 320
         #define X_SHIFT 35
         #define Y_SHIFT 0
@@ -159,13 +159,12 @@ extern SPI_HandleTypeDef ST7789_SPI_PORT;
 
     #if ST7789_ROTATION == 3
         #define ST7789_WIDTH 320
-        #define ST7789_HEIGHT 240
+        #define ST7789_HEIGHT 170
         #define X_SHIFT 0
         #define Y_SHIFT 35
     #endif
 
 #endif
-
 /**
  *Color of pen
  *If you want to use another color, you can choose one in RGB565 format.

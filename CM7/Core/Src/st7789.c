@@ -196,65 +196,28 @@ void ST7789_Init(void)
  * @param color -> color to Fill with
  * @return none
  */
-//void ST7789_Fill_Color(uint16_t color)
-//{
-//	uint16_t i;
-//	ST7789_SetAddressWindow(0, 0, ST7789_WIDTH - 1, ST7789_HEIGHT - 1);
-//	ST7789_Select();
-//
-//	#ifdef USE_DMA
-//		for (i = 0; i < ST7789_HEIGHT / HOR_LEN; i++)
-//		{
-//			memset(disp_buf, color, sizeof(disp_buf));
-//			ST7789_WriteData(disp_buf, sizeof(disp_buf));
-//		}
-//	#else
-//		uint16_t j;
-//		for (i = 0; i < ST7789_WIDTH; i++)
-//				for (j = 0; j < ST7789_HEIGHT; j++) {
-//					uint8_t data[] = {color >> 8, color & 0xFF};
-//					ST7789_WriteData(data, sizeof(data));
-//				}
-//	#endif
-//	ST7789_UnSelect();
-//}
-
-void MemsetBuffer(uint16_t *buf, uint16_t data, uint32_t size)
-{
-    while (size--) {
-        *buf++ = data;
-    }
-}
-
 void ST7789_Fill_Color(uint16_t color)
 {
-    uint16_t i, j;
-    uint16_t convert_color;
+	color = ~color;
+	uint16_t i;
+	ST7789_SetAddressWindow(0, 0, ST7789_WIDTH - 1, ST7789_HEIGHT - 1);
+	ST7789_Select();
 
-    // Convert RGB565 to big-endian if needed (swap bytes)
-    convert_color = ((color & 0x00FF) << 8) | ((color & 0xFF00) >> 8);
-
-    // Set drawing area to full screen
-    ST7789_SetAddressWindow(0, 0, ST7789_WIDTH - 1, ST7789_HEIGHT - 1);
-    ST7789_Select();
-
-#ifdef LCD_USE_DMA
-    // If using DMA, fill buffer and write in chunks
-    for (i = 0; i < ST7789_HEIGHT / HOR_LEN; i++) {
-        MemsetBuffer(disp_buf, convert_color, ST7789_WIDTH * HOR_LEN);
-        ST7789_WriteData((uint8_t *)disp_buf, sizeof(disp_buf));
-    }
-#else
-    // Otherwise, manually write pixels
-    for (i = 0; i < ST7789_WIDTH; i++) {
-        for (j = 0; j < ST7789_HEIGHT; j++) {
-            uint8_t data[] = {color >> 8, color & 0xFF};  // High byte first
-            ST7789_WriteData(data, sizeof(data));
-        }
-    }
-#endif
-
-    ST7789_UnSelect();
+	#ifdef USE_DMA
+		for (i = 0; i < ST7789_HEIGHT / HOR_LEN; i++)
+		{
+			memset(disp_buf, color, sizeof(disp_buf));
+			ST7789_WriteData(disp_buf, sizeof(disp_buf));
+		}
+	#else
+		uint16_t j;
+		for (i = 0; i < ST7789_WIDTH; i++)
+				for (j = 0; j < ST7789_HEIGHT; j++) {
+					uint8_t data[] = {color >> 8, color & 0xFF};
+					ST7789_WriteData(data, sizeof(data));
+				}
+	#endif
+	ST7789_UnSelect();
 }
 
 /**
@@ -450,9 +413,16 @@ void ST7789_DrawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint
 	if ((y + h - 1) >= ST7789_HEIGHT)
 		return;
 
+	uint32_t size = w * h;
+	uint16_t buffer[size];
+
+	for (uint32_t i = 0; i < size; i++) {
+		buffer[i] = ~data[i];  // Invert each color
+	}
+
 	ST7789_Select();
 	ST7789_SetAddressWindow(x, y, x + w - 1, y + h - 1);
-	ST7789_WriteData((uint8_t *)data, sizeof(uint16_t) * w * h);
+	ST7789_WriteData((uint8_t *)data, sizeof(uint16_t) * size);
 	ST7789_UnSelect();
 }
 

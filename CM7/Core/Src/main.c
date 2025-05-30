@@ -174,7 +174,12 @@ Error_Handler();
   /* USER CODE BEGIN 2 */
   ST7789_Init();
   ST7789_Test();
-
+//  ST7789_Fill_Color(0xF800);
+//  HAL_Delay(500);
+//  ST7789_Fill_Color(0x07E0);
+//  HAL_Delay(500);
+//  ST7789_Fill_Color(0x001F);
+//  HAL_Delay(500);
 
   while(1);
   	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
@@ -426,7 +431,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_HIGH;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
