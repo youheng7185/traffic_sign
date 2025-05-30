@@ -59,6 +59,20 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define cam_ret_Pin GPIO_PIN_2
+#define cam_ret_GPIO_Port GPIOE
+#define cam_pwdn_Pin GPIO_PIN_3
+#define cam_pwdn_GPIO_Port GPIOE
+#define touch_irq_Pin GPIO_PIN_0
+#define touch_irq_GPIO_Port GPIOC
+#define touch_cs_Pin GPIO_PIN_3
+#define touch_cs_GPIO_Port GPIOC
+#define lcd_cs_Pin GPIO_PIN_4
+#define lcd_cs_GPIO_Port GPIOD
+#define lcd_rst_Pin GPIO_PIN_5
+#define lcd_rst_GPIO_Port GPIOD
+#define lcd_dc_Pin GPIO_PIN_6
+#define lcd_dc_GPIO_Port GPIOD
 
 /* USER CODE BEGIN Private defines */
 
