@@ -16,13 +16,13 @@ extern SPI_HandleTypeDef ST7789_SPI_PORT;
 
 /* Pin connection*/
 #define ST7789_RST_PORT GPIOD
-#define ST7789_RST_PIN  lcd_rst_Pin
+#define ST7789_RST_PIN  LCD_RST_Pin
 #define ST7789_DC_PORT  GPIOD
-#define ST7789_DC_PIN   lcd_dc_Pin
+#define ST7789_DC_PIN   LCD_DC_Pin
 
 #ifndef CFG_NO_CS
 #define ST7789_CS_PORT  GPIOD
-#define ST7789_CS_PIN   lcd_cs_Pin
+#define ST7789_CS_PIN   LCD_CS_Pin
 #endif
 
 /* If u need Backlight control, uncomment below */

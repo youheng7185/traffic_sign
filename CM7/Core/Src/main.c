@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "st7789.h"
+#include "OV7670.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,6 +45,11 @@
 
 /* Private variables ---------------------------------------------------------*/
 
+DCMI_HandleTypeDef hdcmi;
+DMA_HandleTypeDef hdma_dcmi;
+
+I2C_HandleTypeDef hi2c1;
+
 SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi2;
 DMA_HandleTypeDef hdma_spi1_tx;
@@ -66,6 +71,8 @@ static void MX_UART4_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_SPI2_Init(void);
+static void MX_DCMI_Init(void);
+static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -76,6 +83,24 @@ uint16_t InvertBits(uint16_t byte)
 {
     return ~byte;
 }
+
+#define OV7670_QVGA_WIDTH  320
+#define OV7670_QVGA_HEIGHT 240
+
+#define USE_GRAYSCALE 0
+
+#if USE_GRAYSCALE
+uint32_t frame_buffer[OV7670_QVGA_WIDTH * OV7670_QVGA_HEIGHT/4];
+#else
+uint32_t frame_buffer[OV7670_QVGA_WIDTH * OV7670_QVGA_HEIGHT/2];
+#endif
+uint8_t new_capture = 0;
+
+static void onFrameCallback(){
+	new_capture = 1;
+}
+
+
 /* USER CODE END 0 */
 
 /**
@@ -98,7 +123,6 @@ int main(void)
   while((__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) != RESET) && (timeout-- > 0));
   if ( timeout < 0 )
   {
-	  while(1);
   Error_Handler();
   }
 /* USER CODE END Boot_Mode_Sequence_1 */
@@ -145,33 +169,33 @@ Error_Handler();
   MX_TIM1_Init();
   MX_SPI1_Init();
   MX_SPI2_Init();
+  MX_DCMI_Init();
+  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
   ST7789_Init();
+  ST7789_Test();
 
-//	ST7789_Fill_Color(InvertBits(0xF800)); // red
-//	// cyan
-//	HAL_Delay(1000);
-//
-//	ST7789_Fill_Color(InvertBits(0x07E0)); // green
-//	HAL_Delay(1000);
-//
-//	ST7789_Fill_Color(InvertBits(0x001F)); // blue
-//	HAL_Delay(1000);
-//
-//	ST7789_Fill_Color(InvertBits(0xFFE0)); // yellow
-//	HAL_Delay(1000);
-  	ST7789_Fill_Color(0xF800); // red
-  	// cyan
-  	HAL_Delay(1000);
 
-  	ST7789_Fill_Color(0x07E0); // green
-  	HAL_Delay(1000);
+  while(1);
+  	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+  	HAL_Delay(100);
+    ov7670_init(&hdcmi, &hdma_dcmi, &hi2c1);
 
-  	ST7789_Fill_Color(0x001F); // blue
-  	HAL_Delay(1000);
+  #if USE_GRAYSCALE
+    ov7670_config(OV7670_MODE_QVGA_YUV);
+  #else
+    ov7670_config(OV7670_MODE_QVGA_RGB565);
+  #endif
+    ov7670_registerCallback(NULL, NULL, &onFrameCallback);
 
-  	ST7789_Fill_Color(0xFFE0); // yellow
-  	HAL_Delay(1000);
+    HAL_Delay(1000);
+
+    ov7670_startCap(OV7670_CAP_SINGLE_FRAME, (uint32_t)frame_buffer);
+
+    HAL_Delay(1000);
+  	ST7789_Fill_Color(0x001F); // yellow
+  	HAL_Delay(200);
+  	Display_OV7670_Frame();
 //	uint16_t colors[] = {
 //		0xF800, // Red
 //		0x07E0, // Green
@@ -292,6 +316,91 @@ void PeriphCommonClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief DCMI Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_DCMI_Init(void)
+{
+
+  /* USER CODE BEGIN DCMI_Init 0 */
+
+  /* USER CODE END DCMI_Init 0 */
+
+  /* USER CODE BEGIN DCMI_Init 1 */
+
+  /* USER CODE END DCMI_Init 1 */
+  hdcmi.Instance = DCMI;
+  hdcmi.Init.SynchroMode = DCMI_SYNCHRO_HARDWARE;
+  hdcmi.Init.PCKPolarity = DCMI_PCKPOLARITY_RISING;
+  hdcmi.Init.VSPolarity = DCMI_VSPOLARITY_HIGH;
+  hdcmi.Init.HSPolarity = DCMI_HSPOLARITY_LOW;
+  hdcmi.Init.CaptureRate = DCMI_CR_ALL_FRAME;
+  hdcmi.Init.ExtendedDataMode = DCMI_EXTEND_DATA_8B;
+  hdcmi.Init.JPEGMode = DCMI_JPEG_DISABLE;
+  hdcmi.Init.ByteSelectMode = DCMI_BSM_ALL;
+  hdcmi.Init.ByteSelectStart = DCMI_OEBS_ODD;
+  hdcmi.Init.LineSelectMode = DCMI_LSM_ALL;
+  hdcmi.Init.LineSelectStart = DCMI_OELS_ODD;
+  if (HAL_DCMI_Init(&hdcmi) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN DCMI_Init 2 */
+
+  /* USER CODE END DCMI_Init 2 */
+
+}
+
+/**
+  * @brief I2C1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C1_Init(void)
+{
+
+  /* USER CODE BEGIN I2C1_Init 0 */
+
+  /* USER CODE END I2C1_Init 0 */
+
+  /* USER CODE BEGIN I2C1_Init 1 */
+
+  /* USER CODE END I2C1_Init 1 */
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.Timing = 0x307075B1;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Analogue filter
+  */
+  if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Digital filter
+  */
+  if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C1_Init 2 */
+
+  /* USER CODE END I2C1_Init 2 */
+
 }
 
 /**
@@ -531,6 +640,9 @@ static void MX_DMA_Init(void)
   /* DMA1_Stream0_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
+  /* DMA1_Stream1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream1_IRQn);
 
 }
 
@@ -549,11 +661,12 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOG_CLK_ENABLE();
+  __HAL_RCC_GPIOI_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, CAMERA_RESET_Pin|cam_pwdn_Pin, GPIO_PIN_RESET);
@@ -562,7 +675,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(touch_cs_GPIO_Port, touch_cs_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, lcd_cs_Pin|lcd_rst_Pin|lcd_dc_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, LCD_CS_Pin|LCD_RST_Pin|LCD_DC_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : CAMERA_RESET_Pin cam_pwdn_Pin */
   GPIO_InitStruct.Pin = CAMERA_RESET_Pin|cam_pwdn_Pin;
@@ -584,8 +697,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(touch_cs_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : lcd_cs_Pin lcd_rst_Pin lcd_dc_Pin */
-  GPIO_InitStruct.Pin = lcd_cs_Pin|lcd_rst_Pin|lcd_dc_Pin;
+  /*Configure GPIO pins : LCD_CS_Pin LCD_RST_Pin LCD_DC_Pin */
+  GPIO_InitStruct.Pin = LCD_CS_Pin|LCD_RST_Pin|LCD_DC_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

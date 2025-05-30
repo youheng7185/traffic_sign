@@ -67,12 +67,12 @@ void Error_Handler(void);
 #define touch_irq_GPIO_Port GPIOC
 #define touch_cs_Pin GPIO_PIN_3
 #define touch_cs_GPIO_Port GPIOC
-#define lcd_cs_Pin GPIO_PIN_4
-#define lcd_cs_GPIO_Port GPIOD
-#define lcd_rst_Pin GPIO_PIN_5
-#define lcd_rst_GPIO_Port GPIOD
-#define lcd_dc_Pin GPIO_PIN_6
-#define lcd_dc_GPIO_Port GPIOD
+#define LCD_CS_Pin GPIO_PIN_4
+#define LCD_CS_GPIO_Port GPIOD
+#define LCD_RST_Pin GPIO_PIN_5
+#define LCD_RST_GPIO_Port GPIOD
+#define LCD_DC_Pin GPIO_PIN_6
+#define LCD_DC_GPIO_Port GPIOD
 
 /* USER CODE BEGIN Private defines */
 

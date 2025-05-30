@@ -1,7 +1,5 @@
 #include "st7789.h"
 
-#define USE_DMA 1
-
 #ifdef USE_DMA
 #include <string.h>
 uint16_t DMA_MIN_SIZE = 16;
@@ -235,7 +233,7 @@ void ST7789_Fill_Color(uint16_t color)
 
     // Convert RGB565 to big-endian if needed (swap bytes)
     convert_color = ((color & 0x00FF) << 8) | ((color & 0xFF00) >> 8);
-    //convert_color = ~convert_color;
+
     // Set drawing area to full screen
     ST7789_SetAddressWindow(0, 0, ST7789_WIDTH - 1, ST7789_HEIGHT - 1);
     ST7789_Select();
@@ -250,7 +248,7 @@ void ST7789_Fill_Color(uint16_t color)
     // Otherwise, manually write pixels
     for (i = 0; i < ST7789_WIDTH; i++) {
         for (j = 0; j < ST7789_HEIGHT; j++) {
-            uint8_t data[] = {~(color >> 8), ~(color & 0xFF)};  // High byte first
+            uint8_t data[] = {color >> 8, color & 0xFF};  // High byte first
             ST7789_WriteData(data, sizeof(data));
         }
     }
