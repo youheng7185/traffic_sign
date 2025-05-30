@@ -422,9 +422,10 @@ void ST7789_DrawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint
 
 	ST7789_Select();
 	ST7789_SetAddressWindow(x, y, x + w - 1, y + h - 1);
-	ST7789_WriteData((uint8_t *)data, sizeof(uint16_t) * size);
+	ST7789_WriteData((uint8_t *)buffer, sizeof(uint16_t) * size);
 	ST7789_UnSelect();
 }
+
 
 /**
  * @brief Invert Fullscreen color
