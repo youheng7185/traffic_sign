@@ -21,7 +21,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "st7789.h"
 #include "OV7670.h"
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,13 +52,14 @@ DMA_HandleTypeDef hdma_dcmi;
 
 I2C_HandleTypeDef hi2c1;
 
+UART_HandleTypeDef hlpuart1;
+UART_HandleTypeDef huart4;
+
 SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi2;
 DMA_HandleTypeDef hdma_spi1_tx;
 
 TIM_HandleTypeDef htim1;
-
-UART_HandleTypeDef huart4;
 
 /* USER CODE BEGIN PV */
 
@@ -68,20 +71,22 @@ void PeriphCommonClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_UART4_Init(void);
-static void MX_TIM1_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_DCMI_Init(void);
+static void MX_LPUART1_UART_Init(void);
 static void MX_I2C1_Init(void);
+static void MX_TIM1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint16_t InvertBits(uint16_t byte)
+int _write(int file, char *data, int len)
 {
-    return ~byte;
+  HAL_UART_Transmit(&hlpuart1, (uint8_t *)data, len, HAL_MAX_DELAY);
+  return len;
 }
 
 #define OV7670_QVGA_WIDTH  320
@@ -100,7 +105,108 @@ static void onFrameCallback(){
 	new_capture = 1;
 }
 
+void OV7670_DisplayFrame(uint16_t x, uint16_t y) {
+    // Check if the frame will fit on the display
+    if ((x >= ST7789_WIDTH) || (y >= ST7789_HEIGHT))
+        return;
+    if ((x + OV7670_QVGA_WIDTH - 1) >= ST7789_WIDTH)
+        return;
+    if ((y + OV7670_QVGA_HEIGHT - 1) >= ST7789_HEIGHT)
+        return;
 
+#if USE_GRAYSCALE
+    // For grayscale mode: each uint32_t contains 4 pixels (8-bit each)
+    uint32_t total_pixels = OV7670_QVGA_WIDTH * OV7670_QVGA_HEIGHT;
+    uint16_t rgb565_buffer[total_pixels];
+
+    for (uint32_t i = 0; i < total_pixels / 4; i++) {
+        uint32_t packed_pixels = frame_buffer[i];
+
+        // Extract 4 grayscale pixels from the uint32_t
+        uint8_t pixel0 = (packed_pixels >> 0) & 0xFF;
+        uint8_t pixel1 = (packed_pixels >> 8) & 0xFF;
+        uint8_t pixel2 = (packed_pixels >> 16) & 0xFF;
+        uint8_t pixel3 = (packed_pixels >> 24) & 0xFF;
+
+        // Convert grayscale to RGB565
+        // RGB565: RRRRRGGG GGGBBBBB
+        rgb565_buffer[i * 4 + 0] = ((pixel0 >> 3) << 11) | ((pixel0 >> 2) << 5) | (pixel0 >> 3);
+        rgb565_buffer[i * 4 + 1] = ((pixel1 >> 3) << 11) | ((pixel1 >> 2) << 5) | (pixel1 >> 3);
+        rgb565_buffer[i * 4 + 2] = ((pixel2 >> 3) << 11) | ((pixel2 >> 2) << 5) | (pixel2 >> 3);
+        rgb565_buffer[i * 4 + 3] = ((pixel3 >> 3) << 11) | ((pixel3 >> 2) << 5) | (pixel3 >> 3);
+    }
+#else
+    // For RGB565 mode: each uint32_t contains 2 pixels (16-bit each)
+    uint32_t total_pixels = OV7670_QVGA_WIDTH * OV7670_QVGA_HEIGHT;
+    uint16_t rgb565_buffer[total_pixels];
+
+    for (uint32_t i = 0; i < total_pixels / 2; i++) {
+        uint32_t packed_pixels = frame_buffer[i];
+
+        // Extract 2 RGB565 pixels from the uint32_t
+        rgb565_buffer[i * 2 + 0] = (uint16_t)(packed_pixels & 0xFFFF);        // Lower 16 bits
+        rgb565_buffer[i * 2 + 1] = (uint16_t)((packed_pixels >> 16) & 0xFFFF); // Upper 16 bits
+    }
+#endif
+
+    // Display the converted frame using your existing ST7789_DrawImage function
+    ST7789_DrawImage(x, y, OV7670_QVGA_WIDTH, OV7670_QVGA_HEIGHT, rgb565_buffer);
+}
+
+HAL_StatusTypeDef ov7670_print_device_id(void)
+{
+    uint8_t id_high, id_low, manu_id;
+
+    printf("Reading OV7670 registers...\r\n");
+
+    // Read Product ID High
+    if(ov7670_read(0x0A, &id_high) != HAL_OK)
+    {
+        printf("Failed to read register 0x0A\r\n");
+        return HAL_ERROR;
+    }
+    printf("Register 0x0A (PID High): 0x%02X (%d)\r\n", id_high, id_high);
+
+    // Read Product ID Low
+    if(ov7670_read(0x0B, &id_low) != HAL_OK)
+    {
+        printf("Failed to read register 0x0B\r\n");
+        return HAL_ERROR;
+    }
+    printf("Register 0x0B (PID Low): 0x%02X (%d)\r\n", id_low, id_low);
+
+    // Read Manufacturer ID
+    if(ov7670_read(0x1C, &manu_id) != HAL_OK)
+    {
+        printf("Failed to read register 0x1C\r\n");
+        return HAL_ERROR;
+    }
+    printf("Register 0x1C (Manufacturer): 0x%02X (%d)\r\n", manu_id, manu_id);
+
+    printf("Combined Product ID: 0x%02X%02X\r\n", id_high, id_low);
+
+    return HAL_OK;
+}
+
+//void I2C_Scan_Bus(void) {
+//    HAL_StatusTypeDef result;
+//    uint8_t i;
+//    printf("Starting I2C scan on hi2c2...\r\n");
+//
+//    for (i = 1; i < 128; i++) {
+//        /*
+//         * The HAL_I2C_IsDeviceReady() function sends a START condition,
+//         * the 7-bit address (i << 1), and waits for ACK.
+//         */
+//        result = HAL_I2C_IsDeviceReady(&hi2c1, (i << 1), 1, 10);
+//        if (result == HAL_OK) {
+//            printf("Found device at 0x%02X\r\n", i);
+//        }
+//        HAL_Delay(1); // Small delay between checks
+//    }
+//
+//    printf("Scan complete.\r\n");
+//}
 /* USER CODE END 0 */
 
 /**
@@ -166,25 +272,28 @@ Error_Handler();
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_UART4_Init();
-  MX_TIM1_Init();
   MX_SPI1_Init();
   MX_SPI2_Init();
   MX_DCMI_Init();
+  MX_LPUART1_UART_Init();
   MX_I2C1_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-  ST7789_Init();
-  ST7789_Test();
-//  ST7789_Fill_Color(0xF800);
-//  HAL_Delay(500);
-//  ST7789_Fill_Color(0x07E0);
-//  HAL_Delay(500);
-//  ST7789_Fill_Color(0x001F);
-//  HAL_Delay(500);
+  printf("hello world\r\n");
+  //I2C_Scan_Bus();
 
-  while(1);
-  	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
-  	HAL_Delay(100);
-    ov7670_init(&hdcmi, &hdma_dcmi, &hi2c1);
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+  ST7789_Init();
+  //ST7789_Test();
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
+  HAL_Delay(100);
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+  HAL_Delay(100);
+  ov7670_init(&hdcmi, &hdma_dcmi, &hi2c1);
+
+
+  HAL_Delay(100);
+
 
   #if USE_GRAYSCALE
     ov7670_config(OV7670_MODE_QVGA_YUV);
@@ -198,30 +307,7 @@ Error_Handler();
     ov7670_startCap(OV7670_CAP_SINGLE_FRAME, (uint32_t)frame_buffer);
 
     HAL_Delay(1000);
-  	ST7789_Fill_Color(0x001F); // yellow
-  	HAL_Delay(200);
-  	Display_OV7670_Frame();
-//	uint16_t colors[] = {
-//		0xF800, // Red
-//		0x07E0, // Green
-//		0x001F, // Blue
-//		0xFFE0, // Yellow
-//		0x07FF, // Cyan
-//		0xF81F, // Magenta
-//		0xFFFF, // White
-//		0x0000  // Black
-//	};
-//
-//	for (int i = 0; i < sizeof(colors)/sizeof(colors[0]); i++) {
-//		uint16_t c = colors[i];
-//		uint16_t swapped = (c >> 8) | (c << 8);  // Byte swap
-//		ST7789_Fill_Color(InvertBits(c));
-//		HAL_Delay(1000);
-//	}
-
-
-
-	while(1);
+    OV7670_DisplayFrame(0, 0);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -257,10 +343,9 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48|RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_DIV1;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = 4;
@@ -374,7 +459,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x307075B1;
+  hi2c1.Init.Timing = 0x10707DBC;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -403,6 +488,102 @@ static void MX_I2C1_Init(void)
   /* USER CODE BEGIN I2C1_Init 2 */
 
   /* USER CODE END I2C1_Init 2 */
+
+}
+
+/**
+  * @brief LPUART1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_LPUART1_UART_Init(void)
+{
+
+  /* USER CODE BEGIN LPUART1_Init 0 */
+
+  /* USER CODE END LPUART1_Init 0 */
+
+  /* USER CODE BEGIN LPUART1_Init 1 */
+
+  /* USER CODE END LPUART1_Init 1 */
+  hlpuart1.Instance = LPUART1;
+  hlpuart1.Init.BaudRate = 115200;
+  hlpuart1.Init.WordLength = UART_WORDLENGTH_8B;
+  hlpuart1.Init.StopBits = UART_STOPBITS_1;
+  hlpuart1.Init.Parity = UART_PARITY_NONE;
+  hlpuart1.Init.Mode = UART_MODE_TX_RX;
+  hlpuart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  hlpuart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  hlpuart1.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  hlpuart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  hlpuart1.FifoMode = UART_FIFOMODE_DISABLE;
+  if (HAL_UART_Init(&hlpuart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetTxFifoThreshold(&hlpuart1, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetRxFifoThreshold(&hlpuart1, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_DisableFifoMode(&hlpuart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN LPUART1_Init 2 */
+
+  /* USER CODE END LPUART1_Init 2 */
+
+}
+
+/**
+  * @brief UART4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_UART4_Init(void)
+{
+
+  /* USER CODE BEGIN UART4_Init 0 */
+
+  /* USER CODE END UART4_Init 0 */
+
+  /* USER CODE BEGIN UART4_Init 1 */
+
+  /* USER CODE END UART4_Init 1 */
+  huart4.Instance = UART4;
+  huart4.Init.BaudRate = 115200;
+  huart4.Init.WordLength = UART_WORDLENGTH_8B;
+  huart4.Init.StopBits = UART_STOPBITS_1;
+  huart4.Init.Parity = UART_PARITY_NONE;
+  huart4.Init.Mode = UART_MODE_TX_RX;
+  huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart4.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart4.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart4.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  huart4.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetTxFifoThreshold(&huart4, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetRxFifoThreshold(&huart4, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_DisableFifoMode(&huart4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN UART4_Init 2 */
+
+  /* USER CODE END UART4_Init 2 */
 
 }
 
@@ -579,54 +760,6 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 2 */
   HAL_TIM_MspPostInit(&htim1);
-
-}
-
-/**
-  * @brief UART4 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_UART4_Init(void)
-{
-
-  /* USER CODE BEGIN UART4_Init 0 */
-
-  /* USER CODE END UART4_Init 0 */
-
-  /* USER CODE BEGIN UART4_Init 1 */
-
-  /* USER CODE END UART4_Init 1 */
-  huart4.Instance = UART4;
-  huart4.Init.BaudRate = 115200;
-  huart4.Init.WordLength = UART_WORDLENGTH_8B;
-  huart4.Init.StopBits = UART_STOPBITS_1;
-  huart4.Init.Parity = UART_PARITY_NONE;
-  huart4.Init.Mode = UART_MODE_TX_RX;
-  huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart4.Init.OverSampling = UART_OVERSAMPLING_16;
-  huart4.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart4.Init.ClockPrescaler = UART_PRESCALER_DIV1;
-  huart4.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  if (HAL_UART_Init(&huart4) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_SetTxFifoThreshold(&huart4, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_SetRxFifoThreshold(&huart4, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_DisableFifoMode(&huart4) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN UART4_Init 2 */
-
-  /* USER CODE END UART4_Init 2 */
 
 }
 

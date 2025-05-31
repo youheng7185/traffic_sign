@@ -30,7 +30,7 @@ HAL_StatusTypeDef ov7670_startCap(uint32_t capMode, uint32_t destAddress);
 HAL_StatusTypeDef ov7670_stopCap();
 void ov7670_registerCallback(void (*cbHsync)(uint32_t h), void (*cbVsync)(uint32_t v), void (* cbFrame)());
 
-HAL_StatusTypeDef ov7670_write(uint8_t regAddr, uint8_t data);
-HAL_StatusTypeDef ov7670_read(uint8_t regAddr, uint8_t *data);
+//HAL_StatusTypeDef ov7670_write(uint8_t regAddr, uint8_t data);
+//HAL_StatusTypeDef ov7670_read(uint8_t regAddr, uint8_t *data);
 
 #endif /* OV7670_OV7670_H_ */

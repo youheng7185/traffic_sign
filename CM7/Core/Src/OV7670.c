@@ -15,7 +15,6 @@
 #include <stdint.h>
 #include "OV7670_REG.h"
 
-
 /*** Internal Const Values, Macros ***/
 
 
@@ -33,8 +32,8 @@ static uint8_t capture = 0;
 static uint8_t imgMode = OV7670_MODE_QVGA_RGB565;
 
 /*** Internal Function Declarations ***/
-//static HAL_StatusTypeDef ov7670_write(uint8_t regAddr, uint8_t data);
-//static HAL_StatusTypeDef ov7670_read(uint8_t regAddr, uint8_t *data);
+static HAL_StatusTypeDef ov7670_write(uint8_t regAddr, uint8_t data);
+static HAL_StatusTypeDef ov7670_read(uint8_t regAddr, uint8_t *data);
 
 /*** External Function Defines ***/
 HAL_StatusTypeDef ov7670_init(DCMI_HandleTypeDef *p_hdcmi, DMA_HandleTypeDef *p_hdma_dcmi, I2C_HandleTypeDef *p_hi2c){
@@ -43,9 +42,9 @@ HAL_StatusTypeDef ov7670_init(DCMI_HandleTypeDef *p_hdcmi, DMA_HandleTypeDef *p_
   sp_hi2c      = p_hi2c;
   s_destAddressForContiuousMode = 0;
 
-  HAL_GPIO_WritePin(GPIOE, CAMERA_RESET_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(CAMERA_RESET_GPIO_Port, CAMERA_RESET_Pin, GPIO_PIN_RESET);
   HAL_Delay(100);
-  HAL_GPIO_WritePin(GPIOE, CAMERA_RESET_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(CAMERA_RESET_GPIO_Port, CAMERA_RESET_Pin, GPIO_PIN_SET);
   HAL_Delay(100);
 
   ov7670_write(0x12, 0x80);  // RESET
@@ -53,6 +52,14 @@ HAL_StatusTypeDef ov7670_init(DCMI_HandleTypeDef *p_hdcmi, DMA_HandleTypeDef *p_
 
   //uint8_t buffer[4];
   //ov7670_read(0x0b, buffer);
+  printf("run until here\r\n");
+  uint8_t id_low, id_high;
+  ov7670_read(0x0A, &id_low);
+  ov7670_read(0x0B, &id_high);
+  printf("%d, %d\r\n", id_low, id_high);
+
+  ov7670_read(0x00, &id_low);
+  printf("%d, %d\r\n", id_low, id_high);
 
   return HAL_OK;
 }
