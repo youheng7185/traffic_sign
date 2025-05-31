@@ -135,6 +135,19 @@ void OV7670_DisplayFrame(uint16_t x, uint16_t y) {
         rgb565_buffer[i * 4 + 2] = ((pixel2 >> 3) << 11) | ((pixel2 >> 2) << 5) | (pixel2 >> 3);
         rgb565_buffer[i * 4 + 3] = ((pixel3 >> 3) << 11) | ((pixel3 >> 2) << 5) | (pixel3 >> 3);
     }
+//#else
+//    // For RGB565 mode: each uint32_t contains 2 pixels (16-bit each)
+//    uint32_t total_pixels = OV7670_QVGA_WIDTH * OV7670_QVGA_HEIGHT;
+//    uint16_t rgb565_buffer[total_pixels];
+//
+//    for (uint32_t i = 0; i < total_pixels / 2; i++) {
+//        uint32_t packed_pixels = frame_buffer[i];
+//
+//        // Extract 2 RGB565 pixels from the uint32_t
+//        rgb565_buffer[i * 2 + 0] = (uint16_t)(packed_pixels & 0xFFFF);        // Lower 16 bits
+//        rgb565_buffer[i * 2 + 1] = (uint16_t)((packed_pixels >> 16) & 0xFFFF); // Upper 16 bits
+//    }
+//#endif
 #else
     // For RGB565 mode: each uint32_t contains 2 pixels (16-bit each)
     uint32_t total_pixels = OV7670_QVGA_WIDTH * OV7670_QVGA_HEIGHT;
@@ -144,8 +157,15 @@ void OV7670_DisplayFrame(uint16_t x, uint16_t y) {
         uint32_t packed_pixels = frame_buffer[i];
 
         // Extract 2 RGB565 pixels from the uint32_t
-        rgb565_buffer[i * 2 + 0] = (uint16_t)(packed_pixels & 0xFFFF);        // Lower 16 bits
-        rgb565_buffer[i * 2 + 1] = (uint16_t)((packed_pixels >> 16) & 0xFFFF); // Upper 16 bits
+        uint16_t pixel0 = (uint16_t)(packed_pixels & 0xFFFF);        // Lower 16 bits
+        uint16_t pixel1 = (uint16_t)((packed_pixels >> 16) & 0xFFFF); // Upper 16 bits
+
+        // Swap endianness (byte order)
+        pixel0 = (pixel0 >> 8) | (pixel0 << 8);
+        pixel1 = (pixel1 >> 8) | (pixel1 << 8);
+
+        rgb565_buffer[i * 2 + 0] = pixel0;
+        rgb565_buffer[i * 2 + 1] = pixel1;
     }
 #endif
 
@@ -305,15 +325,22 @@ Error_Handler();
     HAL_Delay(1000);
 
     ov7670_startCap(OV7670_CAP_SINGLE_FRAME, (uint32_t)frame_buffer);
-
-    HAL_Delay(1000);
-    OV7670_DisplayFrame(0, 0);
+//    ov7670_startCap(OV7670_CAP_SINGLE_FRAME, (uint32_t)frame_buffer);
+//
+//    HAL_Delay(1000);
+//    OV7670_DisplayFrame(0, 0);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  if(new_capture)
+	  {
+		  OV7670_DisplayFrame(0, 0);
+		  ov7670_startCap(OV7670_CAP_SINGLE_FRAME, (uint32_t)frame_buffer);
+	  }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

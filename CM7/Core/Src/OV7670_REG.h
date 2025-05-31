@@ -114,7 +114,7 @@ const uint8_t OV7670_reg[][2] = {
 
 		  /* others */
 		  {0x1E, 0x31}, //mirror flip
-		//  {0x42, 0x08}, // color bar
+		  //{0x42, 0x08}, // color bar
 
 		  {REG_EOT, REG_EOT},
 	};
