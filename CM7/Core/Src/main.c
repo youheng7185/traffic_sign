@@ -300,20 +300,14 @@ Error_Handler();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
   printf("hello world\r\n");
-  //I2C_Scan_Bus();
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   ST7789_Init();
-  //ST7789_Test();
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
-  HAL_Delay(100);
+  HAL_Delay(20);
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
-  HAL_Delay(100);
+  HAL_Delay(20);
   ov7670_init(&hdcmi, &hdma_dcmi, &hi2c1);
-
-
-  HAL_Delay(100);
-
 
   #if USE_GRAYSCALE
     ov7670_config(OV7670_MODE_QVGA_YUV);
@@ -322,13 +316,8 @@ Error_Handler();
   #endif
     ov7670_registerCallback(NULL, NULL, &onFrameCallback);
 
-    HAL_Delay(1000);
 
     ov7670_startCap(OV7670_CAP_SINGLE_FRAME, (uint32_t)frame_buffer);
-//    ov7670_startCap(OV7670_CAP_SINGLE_FRAME, (uint32_t)frame_buffer);
-//
-//    HAL_Delay(1000);
-//    OV7670_DisplayFrame(0, 0);
   /* USER CODE END 2 */
 
   /* Infinite loop */
