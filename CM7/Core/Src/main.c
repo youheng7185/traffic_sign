@@ -301,12 +301,16 @@ Error_Handler();
   /* USER CODE BEGIN 2 */
   printf("hello world\r\n");
 
+  // start xclk for ov7670
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+  // init display
   ST7789_Init();
+  // reset ov7670
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
   HAL_Delay(20);
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
   HAL_Delay(20);
+  // init camera
   ov7670_init(&hdcmi, &hdma_dcmi, &hi2c1);
 
   #if USE_GRAYSCALE
@@ -324,6 +328,7 @@ Error_Handler();
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  // when capture is done, then display directly
 	  if(new_capture)
 	  {
 		  OV7670_DisplayFrame(0, 0);
