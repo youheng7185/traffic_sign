@@ -243,6 +243,14 @@ int main(void)
   int32_t timeout;
 /* USER CODE END Boot_Mode_Sequence_0 */
 
+  /* Enable the CPU Cache */
+
+  /* Enable I-Cache---------------------------------------------------------*/
+  SCB_EnableICache();
+
+  /* Enable D-Cache---------------------------------------------------------*/
+  SCB_EnableDCache();
+
 /* USER CODE BEGIN Boot_Mode_Sequence_1 */
   /* Wait until CPU2 boots and enters in stop mode or timeout*/
   timeout = 0xFFFF;
@@ -305,6 +313,7 @@ Error_Handler();
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   // init display
   ST7789_Init();
+
   // reset ov7670
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
   HAL_Delay(20);

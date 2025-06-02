@@ -86,6 +86,18 @@ HAL_StatusTypeDef ov7670_config(uint8_t mode){
 HAL_StatusTypeDef ov7670_startCap(uint32_t capMode, uint32_t destAddress){
 
 	ov7670_stopCap();
+
+	// Calculate buffer size based on image mode
+	uint32_t buffer_size = OV7670_QVGA_WIDTH * OV7670_QVGA_HEIGHT;
+	if(imgMode == OV7670_MODE_QVGA_RGB565) {
+		buffer_size *= 2; // 2 bytes per pixel for RGB565
+	} else if(imgMode == OV7670_MODE_QVGA_YUV) {
+		buffer_size *= 2; // 2 bytes per pixel for YUV
+	}
+
+	// Invalidate D-Cache for the destination buffer before DMA reception (STM32H7 specific)
+	SCB_InvalidateDCache_by_Addr((uint32_t*)destAddress, buffer_size);
+
 	if (capMode == OV7670_CAP_CONTINUOUS) {
 		/* note: continuous mode automatically invokes DCMI, but DMA needs to be invoked manually */
 		s_destAddressForContiuousMode = destAddress;
@@ -111,10 +123,37 @@ void ov7670_registerCallback(void (*cbHsync)(uint32_t h), void (*cbVsync)(uint32
   s_cbFrame = cbFrame;
 }
 
+//void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi){
+////  printf("FRAME %d\n", HAL_GetTick());
+//  if(s_cbFrame)s_cbFrame();
+//  if(s_destAddressForContiuousMode != 0) {
+//    HAL_DMA_Start_IT(hdcmi->DMA_Handle, (uint32_t)&hdcmi->Instance->DR, s_destAddressForContiuousMode, OV7670_QVGA_WIDTH * OV7670_QVGA_HEIGHT/2);
+//  }
+//  s_currentV++;
+//  s_currentH = 0;
+//}
+
 void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi){
 //  printf("FRAME %d\n", HAL_GetTick());
-  if(s_cbFrame)s_cbFrame();
+
+  // Calculate buffer size based on image mode
+  uint32_t buffer_size = OV7670_QVGA_WIDTH * OV7670_QVGA_HEIGHT;
+  if(imgMode == OV7670_MODE_QVGA_RGB565) {
+    buffer_size *= 2; // 2 bytes per pixel for RGB565
+  } else if(imgMode == OV7670_MODE_QVGA_YUV) {
+    buffer_size *= 2; // 2 bytes per pixel for YUV
+  }
+
+  // Invalidate D-Cache after DMA reception to ensure CPU reads fresh data (STM32H7 specific)
   if(s_destAddressForContiuousMode != 0) {
+    SCB_InvalidateDCache_by_Addr((uint32_t*)s_destAddressForContiuousMode, buffer_size);
+  }
+
+  if(s_cbFrame) s_cbFrame();
+
+  if(s_destAddressForContiuousMode != 0) {
+    // For continuous mode, invalidate cache before next DMA transfer
+    SCB_InvalidateDCache_by_Addr((uint32_t*)s_destAddressForContiuousMode, buffer_size);
     HAL_DMA_Start_IT(hdcmi->DMA_Handle, (uint32_t)&hdcmi->Instance->DR, s_destAddressForContiuousMode, OV7670_QVGA_WIDTH * OV7670_QVGA_HEIGHT/2);
   }
   s_currentV++;
@@ -154,4 +193,19 @@ HAL_StatusTypeDef ov7670_read(uint8_t regAddr, uint8_t *data){
     ret |= HAL_I2C_Master_Receive(sp_hi2c, SLAVE_ADDR+1, data, 1, 100);
   } while (ret != HAL_OK && 0);
   return ret;
+}
+
+HAL_StatusTypeDef ov7670_invalidateCache(uint32_t destAddress) {
+  // Calculate buffer size based on image mode
+  uint32_t buffer_size = OV7670_QVGA_WIDTH * OV7670_QVGA_HEIGHT;
+  if(imgMode == OV7670_MODE_QVGA_RGB565) {
+    buffer_size *= 2; // 2 bytes per pixel for RGB565
+  } else if(imgMode == OV7670_MODE_QVGA_YUV) {
+    buffer_size *= 2; // 2 bytes per pixel for YUV
+  }
+
+  // Invalidate D-Cache to ensure CPU reads fresh data from memory
+  SCB_InvalidateDCache_by_Addr((uint32_t*)destAddress, buffer_size);
+
+  return HAL_OK;
 }

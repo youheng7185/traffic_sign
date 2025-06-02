@@ -43,6 +43,7 @@ static void ST7789_WriteData(uint8_t *buff, size_t buff_size)
 		#ifdef USE_DMA
 			if (DMA_MIN_SIZE <= buff_size)
 			{
+				SCB_CleanDCache_by_Addr((uint32_t*)buff, chunk_size);
 				HAL_SPI_Transmit_DMA(&ST7789_SPI_PORT, buff, chunk_size);
 				//while (ST7789_SPI_PORT.hdmatx->State != HAL_DMA_STATE_READY)
 				while (ST7789_SPI_PORT.State != HAL_SPI_STATE_READY)
@@ -210,6 +211,7 @@ void ST7789_Fill_Color(uint16_t color)
 			for (int i = 0; i < sizeof(disp_buf)/sizeof(uint16_t); i++) {
 			    disp_buf[i] = color;
 			}
+			SCB_CleanDCache_by_Addr((uint32_t*)disp_buf, sizeof(disp_buf));
 			ST7789_WriteData(disp_buf, sizeof(disp_buf));
 		}
 	#else
@@ -423,6 +425,7 @@ void ST7789_DrawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint
 		buffer[i] = ~data[i];  // Invert each color
 	}
 
+	SCB_CleanDCache_by_Addr((uint32_t*)buffer, sizeof(uint16_t) * size);
 	ST7789_Select();
 	ST7789_SetAddressWindow(x, y, x + w - 1, y + h - 1);
 	ST7789_WriteData((uint8_t *)buffer, sizeof(uint16_t) * size);
