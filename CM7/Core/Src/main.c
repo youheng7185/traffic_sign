@@ -228,6 +228,8 @@ HAL_StatusTypeDef ov7670_print_device_id(void)
 //
 //    printf("Scan complete.\r\n");
 //}
+uint32_t time_finish = 0;
+uint32_t diff;
 /* USER CODE END 0 */
 
 /**
@@ -330,8 +332,10 @@ Error_Handler();
   #endif
     ov7670_registerCallback(NULL, NULL, &onFrameCallback);
 
+    char debug[40];
 
     ov7670_startCap(OV7670_CAP_SINGLE_FRAME, (uint32_t)frame_buffer);
+    uint32_t time_start = HAL_GetTick();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -342,8 +346,20 @@ Error_Handler();
 	  if(new_capture)
 	  {
 		  //OV7670_DisplayFrame(0, 0);
+		  //new_capture = 0;
+
+		  time_start = HAL_GetTick();
 		  pre_process_copy_buffer();
 		  display_192x192_frame();
+		  time_finish = HAL_GetTick();
+		  //OV7670_DisplayFrame(0, 0);
+
+
+		  diff = time_finish - time_start;
+		  sprintf(debug, "exe time: %dms, fps: %d", diff, (1000/diff));
+		  ST7789_WriteString(0, 200, debug, Font_11x18, 0x0000, 0xFFFF);
+
+
 		  ov7670_startCap(OV7670_CAP_SINGLE_FRAME, (uint32_t)frame_buffer);
 	  }
 
@@ -492,7 +508,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x10707DBC;
+  hi2c1.Init.Timing = 0x00602173;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
