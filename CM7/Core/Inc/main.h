@@ -55,7 +55,10 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
+#define OV7670_QVGA_WIDTH  320
+#define OV7670_QVGA_HEIGHT 240
 
+extern uint32_t frame_buffer[OV7670_QVGA_WIDTH * OV7670_QVGA_HEIGHT/2];
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

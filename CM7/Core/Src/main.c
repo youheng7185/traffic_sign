@@ -24,6 +24,7 @@
 #include "st7789.h"
 #include "OV7670.h"
 #include <stdio.h>
+#include "nn_preprocess.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -340,7 +341,9 @@ Error_Handler();
 	  // when capture is done, then display directly
 	  if(new_capture)
 	  {
-		  OV7670_DisplayFrame(0, 0);
+		  //OV7670_DisplayFrame(0, 0);
+		  pre_process_copy_buffer();
+		  display_192x192_frame();
 		  ov7670_startCap(OV7670_CAP_SINGLE_FRAME, (uint32_t)frame_buffer);
 	  }
 
