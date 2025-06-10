@@ -351,6 +351,7 @@ Error_Handler();
 		  time_start = HAL_GetTick();
 		  pre_process_copy_buffer();
 		  display_192x192_frame();
+		  aiRun();
 		  time_finish = HAL_GetTick();
 		  //OV7670_DisplayFrame(0, 0);
 

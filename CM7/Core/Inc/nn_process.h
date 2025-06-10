@@ -9,5 +9,6 @@
 #define INC_NN_PROCESS_H_
 
 int aiInit(void);
+int aiRun(void);
 
 #endif /* INC_NN_PROCESS_H_ */
