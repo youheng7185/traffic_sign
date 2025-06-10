@@ -10,5 +10,7 @@
 
 int aiInit(void);
 int aiRun(void);
+void print_result();
+void test_ai();
 
 #endif /* INC_NN_PROCESS_H_ */

@@ -312,6 +312,8 @@ Error_Handler();
   /* USER CODE BEGIN 2 */
   printf("hello world\r\n");
   aiInit();
+  test_ai();
+
   // start xclk for ov7670
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   // init display
@@ -359,6 +361,7 @@ Error_Handler();
 		  diff = time_finish - time_start;
 		  sprintf(debug, "exe time: %dms, fps: %d", diff, (1000/diff));
 		  ST7789_WriteString(0, 200, debug, Font_11x18, 0x0000, 0xFFFF);
+		  print_result();
 
 
 		  ov7670_startCap(OV7670_CAP_SINGLE_FRAME, (uint32_t)frame_buffer);
