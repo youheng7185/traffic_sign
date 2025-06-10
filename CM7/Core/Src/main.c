@@ -311,7 +311,7 @@ Error_Handler();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
   printf("hello world\r\n");
-
+  aiInit();
   // start xclk for ov7670
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   // init display
