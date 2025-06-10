@@ -1,18 +1,18 @@
-ST Edge AI Core v2.1.0-20182 a437ed3c9
-Created date          : 2025-06-10 03:11:34
-Parameters            : generate --model /tmp/stm32ai_service/c63d88b8-0789-4476-b3b1-648308c9ba38/gtsrb_cnn4.tflite --optimization time --target stm32f4 --name network --workspace /tmp/stm32ai_service/c63d88b8-0789-4476-b3b1-648308c9ba38/workspace --output /tmp/stm32ai_service/c63d88b8-0789-4476-b3b1-648308c9ba38/output
+ST Edge AI Core v2.1.0-20194 329b0e98d
+Created date          : 2025-06-10 18:41:14
+Parameters            : generate --target stm32h7 --name network -m C:/Users/lapchong/Downloads/gtsrb_cnn(4).tflite --compression none --verbosity 1 --workspace C:/Users/lapchong/AppData/Local/Temp/mxAI_workspace29208680276070016659574569634312347 --output C:/Users/lapchong/.stm32cubemx/network_output
 
 Exec/report summary (generate)
 ------------------------------------------------------------------------------------------------------------------------------------
-model file         :   /tmp/stm32ai_service/c63d88b8-0789-4476-b3b1-648308c9ba38/gtsrb_cnn4.tflite                                  
+model file         :   C:\Users\lapchong\Downloads\gtsrb_cnn(4).tflite                                                              
 type               :   tflite                                                                                                       
 c_name             :   network                                                                                                      
-compression        :   lossless                                                                                                     
+compression        :   none                                                                                                         
 options            :   allocate-inputs, allocate-outputs                                                                            
-optimization       :   time                                                                                                         
-target/series      :   stm32f4                                                                                                      
-workspace dir      :   /tmp/stm32ai_service/c63d88b8-0789-4476-b3b1-648308c9ba38/workspace                                          
-output dir         :   /tmp/stm32ai_service/c63d88b8-0789-4476-b3b1-648308c9ba38/output                                             
+optimization       :   balanced                                                                                                     
+target/series      :   stm32h7                                                                                                      
+workspace dir      :   C:\Users\lapchong\AppData\Local\Temp\mxAI_workspace29208680276070016659574569634312347                       
+output dir         :   C:\Users\lapchong\.stm32cubemx\network_output                                                                
 model_fmt          :   sa/ua per tensor                                                                                             
 model_name         :   gtsrb_cnn4                                                                                                   
 model_hash         :   0x1f9cc90b4799f3458777212edc41d27a                                                                           
@@ -22,8 +22,8 @@ input 1/1          :   'serving_default_ke..tensor_680', uint8(1x32x32x3), 3.00 
 output 1/1         :   'conversion_17', uint8(1x43), 43 Bytes, QLinear(0.003906250,0,uint8), activations                            
 macc               :   10,768,870                                                                                                   
 weights (ro)       :   362,700 B (354.20 KiB) (1 segment) / -1,083,360(-74.9%) vs float model                                       
-activations (rw)   :   38,128 B (37.23 KiB) (1 segment) *                                                                           
-ram (total)        :   38,128 B (37.23 KiB) = 38,128 + 0 + 0                                                                        
+activations (rw)   :   37,168 B (36.30 KiB) (1 segment) *                                                                           
+ram (total)        :   37,168 B (36.30 KiB) = 37,168 + 0 + 0                                                                        
 ------------------------------------------------------------------------------------------------------------------------------------
 (*) 'input'/'output' buffers can be used from the activations buffer
 
@@ -92,7 +92,7 @@ m_id   layer (type,original)                      oshape                 param/s
 ------ ------------------------------------------ ---------------------- ----------------- ----------- -------------------------------- --- --------------- ------------------- ---------------------- 
 17     conversion_17 (Conversion, QUANTIZE)       [b:1,c:43]                                        86                            nl_16   |                                     Conversion_[o][18]     
 ------ ------------------------------------------ ---------------------- ----------------- ----------- -------------------------------- --- --------------- ------------------- ---------------------- 
-model/c-model: macc=10,826,342/10,768,870 -57,472(-0.5%) weights=362,700/362,700  activations=--/38,128 io=--/0
+model/c-model: macc=10,826,342/10,768,870 -57,472(-0.5%) weights=362,700/362,700  activations=--/37,168 io=--/0
 
 
 
@@ -102,7 +102,7 @@ model name            : gtsrb_cnn4
 c-name                : network
 c-node #              : 19
 c-array #             : 42
-activations size      : 38128 (1 segment)
+activations size      : 37168 (1 segment)
 weights size          : 362700 (1 segment)
 macc                  : 10768870
 inputs                : ['serving_default_keras_tensor_680_output']
@@ -299,45 +299,45 @@ m_id   name                               c_macc                    c_rom       
 16     nl_16                              |                  0.0%   |                  0.0%   [17]       
 17     conversion_17                      |                  0.0%   |                  0.0%   [18]       
 ------ ---------------------------------- ------------------------- ------------------------- ---------- 
-macc=10,768,870 weights=362,700 act=38,128 ram_io=0
+macc=10,768,870 weights=362,700 act=37,168 ram_io=0
  
- Requested memory size by section - "stm32f4" target
+ Requested memory size by section - "stm32h7" target
  ------------------------------ -------- --------- ------- -------- 
  module                             text    rodata    data      bss 
  ------------------------------ -------- --------- ------- -------- 
- NetworkRuntime1010_CM4_GCC.a     28,676         0       0        0 
- network.o                         1,010     2,815   5,516      300 
+ NetworkRuntime1010_CM7_GCC.a     28,892         0       0        0 
+ network.o                         1,016     2,815   5,516      300 
  network_data.o                       48        16      88        0 
- lib (toolchain)*                  2,116         0       0        0 
+ lib (toolchain)*                    104         0       0        0 
  ------------------------------ -------- --------- ------- -------- 
- RT total**                       31,850     2,831   5,604      300 
+ RT total**                       30,060     2,831   5,604      300 
  ------------------------------ -------- --------- ------- -------- 
  weights                               0   362,704       0        0 
- activations                           0         0       0   38,128 
+ activations                           0         0       0   37,168 
  io                                    0         0       0        0 
  ------------------------------ -------- --------- ------- -------- 
- TOTAL                            31,850   365,535   5,604   38,428 
+ TOTAL                            30,060   365,535   5,604   37,468 
  ------------------------------ -------- --------- ------- -------- 
  *  toolchain objects (libm/libgcc*)
  ** RT AI runtime objects (kernels+infrastructure)
   
-  Summary - "stm32f4" target
-  ---------------------------------------------------
-               FLASH (ro)      %*   RAM (rw)       % 
-  ---------------------------------------------------
-  RT total         40,285   10.0%      5,904   13.4% 
-  ---------------------------------------------------
-  TOTAL           402,989             44,032         
-  ---------------------------------------------------
+  Summary - "stm32h7" target
+  --------------------------------------------------
+               FLASH (ro)     %*   RAM (rw)       % 
+  --------------------------------------------------
+  RT total         38,495   9.6%      5,904   13.7% 
+  --------------------------------------------------
+  TOTAL           401,199            43,072         
+  --------------------------------------------------
   *  rt/total
 
 
 Generated files (7)
----------------------------------------------------------------------------------------- 
-/tmp/stm32ai_service/c63d88b8-0789-4476-b3b1-648308c9ba38/output/network_data_params.h   
-/tmp/stm32ai_service/c63d88b8-0789-4476-b3b1-648308c9ba38/output/network_data_params.c   
-/tmp/stm32ai_service/c63d88b8-0789-4476-b3b1-648308c9ba38/output/network_data.h          
-/tmp/stm32ai_service/c63d88b8-0789-4476-b3b1-648308c9ba38/output/network_data.c          
-/tmp/stm32ai_service/c63d88b8-0789-4476-b3b1-648308c9ba38/output/network_config.h        
-/tmp/stm32ai_service/c63d88b8-0789-4476-b3b1-648308c9ba38/output/network.h               
-/tmp/stm32ai_service/c63d88b8-0789-4476-b3b1-648308c9ba38/output/network.c               
+--------------------------------------------------------------------- 
+C:\Users\lapchong\.stm32cubemx\network_output\network_data_params.h   
+C:\Users\lapchong\.stm32cubemx\network_output\network_data_params.c   
+C:\Users\lapchong\.stm32cubemx\network_output\network_data.h          
+C:\Users\lapchong\.stm32cubemx\network_output\network_data.c          
+C:\Users\lapchong\.stm32cubemx\network_output\network_config.h        
+C:\Users\lapchong\.stm32cubemx\network_output\network.h               
+C:\Users\lapchong\.stm32cubemx\network_output\network.c               

@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    network.c
   * @author  AST Embedded Analytics Research Platform
-  * @date    2025-06-10T03:11:32+0000
+  * @date    2025-06-10T18:41:13+0800
   * @brief   AI Tool Automatic Code Generator for Embedded NN computing
   ******************************************************************************
   * @attention
@@ -42,7 +42,7 @@
 #endif
 
 #undef AI_TOOLS_DATE_TIME
-#define AI_TOOLS_DATE_TIME   "2025-06-10T03:11:32+0000"
+#define AI_TOOLS_DATE_TIME   "2025-06-10T18:41:13+0800"
 
 #undef AI_TOOLS_COMPILE_TIME
 #define AI_TOOLS_COMPILE_TIME    __DATE__ " " __TIME__
@@ -1166,11 +1166,11 @@ AI_NETWORK_OBJ_DECLARE(
     AI_BUFFER_SHAPE_INIT(AI_SHAPE_BCWH, 4, 1, 362700, 1, 1),
     362700, NULL, NULL),
   AI_BUFFER_INIT(AI_FLAG_NONE,  AI_BUFFER_FORMAT_U8,
-    AI_BUFFER_SHAPE_INIT(AI_SHAPE_BCWH, 4, 1, 38128, 1, 1),
-    38128, NULL, NULL),
+    AI_BUFFER_SHAPE_INIT(AI_SHAPE_BCWH, 4, 1, 37168, 1, 1),
+    37168, NULL, NULL),
   AI_TENSOR_LIST_IO_OBJ_INIT(AI_FLAG_NONE, AI_NETWORK_IN_NUM, &serving_default_keras_tensor_680_output),
   AI_TENSOR_LIST_IO_OBJ_INIT(AI_FLAG_NONE, AI_NETWORK_OUT_NUM, &conversion_17_output),
-  &conversion_0_layer, 0x4ae459f8, NULL)
+  &conversion_0_layer, 0x2aa6428f, NULL)
 
 #else
 
@@ -1185,12 +1185,12 @@ AI_NETWORK_OBJ_DECLARE(
   AI_BUFFER_ARRAY_OBJ_INIT_STATIC(
   	AI_FLAG_NONE, 1,
     AI_BUFFER_INIT(AI_FLAG_NONE,  AI_BUFFER_FORMAT_U8,
-      AI_BUFFER_SHAPE_INIT(AI_SHAPE_BCWH, 4, 1, 38128, 1, 1),
-      38128, NULL, NULL)
+      AI_BUFFER_SHAPE_INIT(AI_SHAPE_BCWH, 4, 1, 37168, 1, 1),
+      37168, NULL, NULL)
   ),
   AI_TENSOR_LIST_IO_OBJ_INIT(AI_FLAG_NONE, AI_NETWORK_IN_NUM, &serving_default_keras_tensor_680_output),
   AI_TENSOR_LIST_IO_OBJ_INIT(AI_FLAG_NONE, AI_NETWORK_OUT_NUM, &conversion_17_output),
-  &conversion_0_layer, 0x4ae459f8, NULL)
+  &conversion_0_layer, 0x2aa6428f, NULL)
 
 #endif	/*(AI_TOOLS_API_VERSION < AI_TOOLS_API_VERSION_1_5)*/
 
@@ -1206,12 +1206,12 @@ ai_bool network_configure_activations(
   if (ai_platform_get_activations_map(g_network_activations_map, 1, params)) {
     /* Updating activations (byte) offsets */
     
-    serving_default_keras_tensor_680_output_array.data = AI_PTR(g_network_activations_map[0] + 31980);
-    serving_default_keras_tensor_680_output_array.data_start = AI_PTR(g_network_activations_map[0] + 31980);
-    conversion_0_output_array.data = AI_PTR(g_network_activations_map[0] + 35052);
-    conversion_0_output_array.data_start = AI_PTR(g_network_activations_map[0] + 35052);
-    conv2d_1_scratch0_array.data = AI_PTR(g_network_activations_map[0] + 32768);
-    conv2d_1_scratch0_array.data_start = AI_PTR(g_network_activations_map[0] + 32768);
+    serving_default_keras_tensor_680_output_array.data = AI_PTR(g_network_activations_map[0] + 31812);
+    serving_default_keras_tensor_680_output_array.data_start = AI_PTR(g_network_activations_map[0] + 31812);
+    conversion_0_output_array.data = AI_PTR(g_network_activations_map[0] + 31808);
+    conversion_0_output_array.data_start = AI_PTR(g_network_activations_map[0] + 31808);
+    conv2d_1_scratch0_array.data = AI_PTR(g_network_activations_map[0] + 34884);
+    conv2d_1_scratch0_array.data_start = AI_PTR(g_network_activations_map[0] + 34884);
     conv2d_1_output_array.data = AI_PTR(g_network_activations_map[0] + 0);
     conv2d_1_output_array.data_start = AI_PTR(g_network_activations_map[0] + 0);
     eltwise_2_output_array.data = AI_PTR(g_network_activations_map[0] + 0);
@@ -1371,7 +1371,7 @@ ai_bool ai_network_get_info(
       .params            = AI_STRUCT_INIT,
       .activations       = AI_STRUCT_INIT,
       .n_nodes           = 0,
-      .signature         = 0x4ae459f8,
+      .signature         = 0x2aa6428f,
     };
 
     if (!ai_platform_api_get_network_report(network, &r)) return false;
@@ -1419,7 +1419,7 @@ ai_bool ai_network_get_report(
       .map_weights       = AI_STRUCT_INIT,
       .map_activations   = AI_STRUCT_INIT,
       .n_nodes           = 0,
-      .signature         = 0x4ae459f8,
+      .signature         = 0x2aa6428f,
     };
 
     if (!ai_platform_api_get_network_report(network, &r)) return false;

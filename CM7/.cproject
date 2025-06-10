@@ -23,7 +23,7 @@
 							<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.fpu.1572692461" name="Floating-point unit" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.fpu" useByScannerDiscovery="true" value="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.fpu.value.fpv5-d16" valueType="enumerated"/>
 							<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.floatabi.1183334531" name="Floating-point ABI" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.floatabi" useByScannerDiscovery="true" value="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.floatabi.value.hard" valueType="enumerated"/>
 							<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.target_board.705920706" name="Board" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.target_board" useByScannerDiscovery="false" value="genericBoard" valueType="string"/>
-							<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.defaults.1691795228" name="Defaults" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.defaults" useByScannerDiscovery="false" value="com.st.stm32cube.ide.common.services.build.inputs.revA.1.0.6 || Debug || true || Executable || com.st.stm32cube.ide.mcu.gnu.managedbuild.option.toolchain.value.workspace || STM32H757BITx || 0 || 0 || arm-none-eabi- || ${gnu_tools_for_stm32_compiler_path} || ../Core/Inc | ../../Drivers/STM32H7xx_HAL_Driver/Inc | ../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy | ../../Drivers/CMSIS/Device/ST/STM32H7xx/Include | ../../Drivers/CMSIS/Include ||  ||  || CORE_CM7 | USE_HAL_DRIVER | STM32H757xx | USE_PWR_LDO_SUPPLY ||  || Drivers | Core/Src | Core/Startup | Common ||  ||  || ${workspace_loc:/${ProjName}/STM32H757BITX_FLASH.ld} || true || NonSecure ||  || secure_nsclib.o ||  || None ||  ||  || " valueType="string"/>
+							<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.defaults.1691795228" name="Defaults" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.defaults" useByScannerDiscovery="false" value="com.st.stm32cube.ide.common.services.build.inputs.revA.1.0.6 || Debug || true || Executable || com.st.stm32cube.ide.mcu.gnu.managedbuild.option.toolchain.value.workspace || STM32H757BITx || 0 || 0 || arm-none-eabi- || ${gnu_tools_for_stm32_compiler_path} || ../Core/Inc | ../../Drivers/STM32H7xx_HAL_Driver/Inc | ../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy | ../../Drivers/CMSIS/Device/ST/STM32H7xx/Include | ../../Drivers/CMSIS/Include | ../../Middlewares/ST/AI/Inc | ../X-CUBE-AI/App ||  ||  || CORE_CM7 | USE_HAL_DRIVER | STM32H757xx | USE_PWR_LDO_SUPPLY ||  || Drivers | Core/Src | Core/Startup | Common ||  || ../../Middlewares/ST/AI/Lib/NetworkRuntime1010_CM7_GCC.a || ${workspace_loc:/${ProjName}/STM32H757BITX_FLASH.ld} || true || NonSecure ||  || secure_nsclib.o ||  || None ||  ||  || " valueType="string"/>
 							<option id="com.st.stm32cube.ide.mcu.debug.option.cpuclock.1354140527" name="Cpu clock frequence" superClass="com.st.stm32cube.ide.mcu.debug.option.cpuclock" useByScannerDiscovery="false" value="240" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.targetplatform.1478575431" isAbstract="false" osList="all" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.targetplatform"/>
 							<builder buildPath="${workspace_loc:/traffic_sign_CM7}/Debug" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.builder.868665364" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.builder"/>
@@ -53,6 +53,9 @@
 									<listOptionValue builtIn="false" value="../Core/Src/stai"/>
 									<listOptionValue builtIn="false" value="../Core/Src/stai/Inc"/>
 									<listOptionValue builtIn="false" value="../Core/Src/stai/Lib"/>
+									<listOptionValue builtIn="false" value="../../Middlewares/ST/AI/Inc"/>
+									<listOptionValue builtIn="false" value="../X-CUBE-AI/App"/>
+									<listOptionValue builtIn="false" value="../../Middlewares/ST/AI/Lib"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.2042515866" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -66,7 +69,7 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value=":NetworkRuntime1010_CM7_GCC.a"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.linker.option.directories.1505306954" name="Library search path (-L)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.linker.option.directories" valueType="libPaths">
-									<listOptionValue builtIn="false" value="../Core/Src/stai/Lib"/>
+									<listOptionValue builtIn="false" value="../../Middlewares/ST/AI/Lib"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.linker.input.121443757" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -88,6 +91,7 @@
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Common"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="X-CUBE-AI/App"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -115,7 +119,7 @@
 							<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.fpu.835164283" name="Floating-point unit" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.fpu" useByScannerDiscovery="true" value="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.fpu.value.fpv5-d16" valueType="enumerated"/>
 							<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.floatabi.1270119835" name="Floating-point ABI" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.floatabi" useByScannerDiscovery="true" value="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.floatabi.value.hard" valueType="enumerated"/>
 							<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.target_board.1775330223" name="Board" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.target_board" useByScannerDiscovery="false" value="genericBoard" valueType="string"/>
-							<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.defaults.42755721" name="Defaults" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.defaults" useByScannerDiscovery="false" value="com.st.stm32cube.ide.common.services.build.inputs.revA.1.0.6 || Release || false || Executable || com.st.stm32cube.ide.mcu.gnu.managedbuild.option.toolchain.value.workspace || STM32H757BITx || 0 || 0 || arm-none-eabi- || ${gnu_tools_for_stm32_compiler_path} || ../Core/Inc | ../../Drivers/STM32H7xx_HAL_Driver/Inc | ../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy | ../../Drivers/CMSIS/Device/ST/STM32H7xx/Include | ../../Drivers/CMSIS/Include ||  ||  || CORE_CM7 | USE_HAL_DRIVER | STM32H757xx | USE_PWR_LDO_SUPPLY ||  || Drivers | Core/Src | Core/Startup | Common ||  ||  || ${workspace_loc:/${ProjName}/STM32H757BITX_FLASH.ld} || true || NonSecure ||  || secure_nsclib.o ||  || None ||  ||  || " valueType="string"/>
+							<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.defaults.42755721" name="Defaults" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.defaults" useByScannerDiscovery="false" value="com.st.stm32cube.ide.common.services.build.inputs.revA.1.0.6 || Release || false || Executable || com.st.stm32cube.ide.mcu.gnu.managedbuild.option.toolchain.value.workspace || STM32H757BITx || 0 || 0 || arm-none-eabi- || ${gnu_tools_for_stm32_compiler_path} || ../Core/Inc | ../../Drivers/STM32H7xx_HAL_Driver/Inc | ../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy | ../../Drivers/CMSIS/Device/ST/STM32H7xx/Include | ../../Drivers/CMSIS/Include | ../../Middlewares/ST/AI/Inc | ../X-CUBE-AI/App ||  ||  || CORE_CM7 | USE_HAL_DRIVER | STM32H757xx | USE_PWR_LDO_SUPPLY ||  || Drivers | Core/Src | Core/Startup | Common ||  || ../../Middlewares/ST/AI/Lib/NetworkRuntime1010_CM7_GCC.a || ${workspace_loc:/${ProjName}/STM32H757BITX_FLASH.ld} || true || NonSecure ||  || secure_nsclib.o ||  || None ||  ||  || " valueType="string"/>
 							<option id="com.st.stm32cube.ide.mcu.debug.option.cpuclock.259322065" name="Cpu clock frequence" superClass="com.st.stm32cube.ide.mcu.debug.option.cpuclock" useByScannerDiscovery="false" value="240" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.targetplatform.1641977015" isAbstract="false" osList="all" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.targetplatform"/>
 							<builder buildPath="${workspace_loc:/traffic_sign_CM7}/Release" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.builder.728182040" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.builder"/>
@@ -138,6 +142,8 @@
 									<listOptionValue builtIn="false" value="../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy"/>
 									<listOptionValue builtIn="false" value="../../Drivers/CMSIS/Device/ST/STM32H7xx/Include"/>
 									<listOptionValue builtIn="false" value="../../Drivers/CMSIS/Include"/>
+									<listOptionValue builtIn="false" value="../../Middlewares/ST/AI/Inc"/>
+									<listOptionValue builtIn="false" value="../X-CUBE-AI/App"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1530786501" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -147,6 +153,12 @@
 							</tool>
 							<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.linker.1269335733" name="MCU/MPU GCC Linker" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.linker">
 								<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.linker.option.script.100482936" name="Linker Script (-T)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.linker.option.script" value="${workspace_loc:/${ProjName}/STM32H757BITX_FLASH.ld}" valueType="string"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.linker.option.directories.667161734" name="Library search path (-L)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.linker.option.directories" valueType="libPaths">
+									<listOptionValue builtIn="false" value="../../Middlewares/ST/AI/Lib"/>
+								</option>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.linker.option.libraries.88851897" name="Libraries (-l)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.linker.option.libraries" valueType="libs">
+									<listOptionValue builtIn="false" value=":NetworkRuntime1010_CM7_GCC.a"/>
+								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.linker.input.2135430554" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>

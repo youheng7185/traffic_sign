@@ -83,7 +83,7 @@
       "mpool_id": 0,
       "name": "conv2d_1_scratch0_array",
       "nbits": 8,
-      "offset_start": 32768,
+      "offset_start": 34884,
       "qmn": {},
       "shape": [
         1,
@@ -965,7 +965,7 @@
       "mpool_id": 0,
       "name": "conversion_0_output_array",
       "nbits": 8,
-      "offset_start": 35052,
+      "offset_start": 31808,
       "qmn": {},
       "shape": [
         32,
@@ -2060,7 +2060,7 @@
       "mpool_id": 0,
       "name": "serving_default_keras_tensor_680_output_array",
       "nbits": 8,
-      "offset_start": 31980,
+      "offset_start": 31812,
       "qmn": {},
       "shape": [
         32,
@@ -2311,51 +2311,51 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2025-06-10T03:11:32+0000",
+      "generated_time": "2025-06-10T18:41:13+0800",
       "model_files": [
         {
           "name": "network_data_params.h",
-          "signature": "0x53344f70e70517004376fc2b2feac5c2"
+          "signature": "0x65a7da6c3b448e6cf59e1b7ab3f6b2e8"
         },
         {
           "name": "network_data_params.c",
-          "signature": "0x871e567f0e3bf95c51d73fe66f671554"
+          "signature": "0x06aa1d647ce2b899d9dd1f4f706ad730"
         },
         {
           "name": "network_data.h",
-          "signature": "0x235f4044f1c04f441d434001d44ea055"
+          "signature": "0x5a73344bf1544b084176da987b0f928d"
         },
         {
           "name": "network_data.c",
-          "signature": "0x4b37aecf7627e534fc593f1df4aee508"
+          "signature": "0xc2d6f1d27ec6490a8aeed96557eac572"
         },
         {
           "name": "network_config.h",
-          "signature": "0x82738d3ee29e0cf5de6fde7a650574e2"
+          "signature": "0x00389d93018e1e404aa43e10255bf40f"
         },
         {
           "name": "network.h",
-          "signature": "0xd30dae5e9980a105574945f755bcf99d"
+          "signature": "0x8dbab00642b47636ac934cfd1e414289"
         },
         {
           "name": "network.c",
-          "signature": "0x6590f9aa2953bc3ef9b65c0a7392ecf8"
+          "signature": "0xae0a73e31e3530b8f59607aa92440473"
         }
       ],
       "name": "network"
     },
-    "network_signature": "0x4ae459f88bacb8d7",
+    "network_signature": "0x2aa6428f6d504597",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --model /tmp/stm32ai_service/c63d88b8-0789-4476-b3b1-648308c9ba38/gtsrb_cnn4.tflite --optimization time --target stm32f4 --name network --workspace /tmp/stm32ai_service/c63d88b8-0789-4476-b3b1-648308c9ba38/workspace --output /tmp/stm32ai_service/c63d88b8-0789-4476-b3b1-648308c9ba38/output",
+        "arguments": "generate --target stm32h7 --name network -m C:/Users/lapchong/Downloads/gtsrb_cnn(4).tflite --compression none --verbosity 1 --workspace C:/Users/lapchong/AppData/Local/Temp/mxAI_workspace29208680276070016659574569634312347 --output C:/Users/lapchong/.stm32cubemx/network_output",
         "environment": [
-          "STATS_TYPE=stmai_webservice"
+          "STATS_TYPE=X-CUBE-AI"
         ],
         "input_model": {
           "model_files": [
             {
-              "name": "gtsrb_cnn4.tflite",
+              "name": "gtsrb_cnn(4).tflite",
               "signature": "0x1f9cc90b4799f3458777212edc41d27a"
             }
           ],
@@ -2365,7 +2365,7 @@
           "type": "tflite"
         },
         "name": "ST.EdgeAI.Core",
-        "version": "2.1.0-20182 a437ed3c9"
+        "version": "2.1.0-20194 329b0e98d"
       }
     ]
   },
@@ -3222,16 +3222,16 @@
   ],
   "json_schema_version": "2.0",
   "memory_footprint": {
-    "activations": 38128,
+    "activations": 37168,
     "io": [
       0,
       0
     ],
-    "kernel_flash": 40285,
+    "kernel_flash": 38495,
     "kernel_ram": 5904,
-    "series": "stm32f4",
-    "toolchain": "arm-none-eabi-gcc (GNU Tools for STM32 10.3-2021.10.20211105-1100) 10.3.1 20210824 (release)",
-    "toolchain_flash": 2116,
+    "series": "stm32h7",
+    "toolchain": "arm-none-eabi-gcc (GNU Tools for STM32 13.3.rel1.20240926-1715) 13.3.1 20240614",
+    "toolchain_flash": 104,
     "toolchain_ram": 0,
     "weights": 362700
   },
@@ -3279,7 +3279,7 @@
       "rights": "ACC_WRITE",
       "size_bytes": -1,
       "subpools": [],
-      "used_size_bytes": 38128,
+      "used_size_bytes": 37168,
       "user_allocated": false,
       "virtual": false
     },
