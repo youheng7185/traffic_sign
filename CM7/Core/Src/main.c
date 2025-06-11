@@ -348,10 +348,11 @@ Error_Handler();
 	  // when capture is done, then display directly
 	  if(new_capture)
 	  {
+		  time_start = HAL_GetTick();
 		  //OV7670_DisplayFrame(0, 0);
 		  //new_capture = 0;
 
-		  time_start = HAL_GetTick();
+
 		  pre_process_copy_buffer();
 		  display_192x192_frame();
 		  aiRun();
