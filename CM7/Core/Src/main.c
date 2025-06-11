@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include "nn_preprocess.h"
 #include "nn_process.h"
+#include "nn_process_bin.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -313,6 +314,8 @@ Error_Handler();
   /* USER CODE BEGIN 2 */
   printf("hello world\r\n");
   aiInit();
+  aiBinInit();
+  aiBinTestRun();
   //test_ai();
 
   // start xclk for ov7670
