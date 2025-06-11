@@ -56,7 +56,7 @@ int aiInit(void) {
 }
 
 int aiRun(void) {
-	//convert_framebuffer_to_input_correct(in_data);
+	convert_framebuffer_to_input_correct(in_data);
 
 	ai_i32 n_batch;
 
@@ -176,7 +176,7 @@ void print_result()
 	}
 	if (!if_found)
 	{
-		sprintf(debug, "nothing");
+		sprintf(debug, "nothing                       ");
 		ST7789_WriteString(0, 215, debug, Font_11x18, 0x0000, 0xFFFF);
 	}
 
