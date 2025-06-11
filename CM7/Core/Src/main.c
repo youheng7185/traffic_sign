@@ -313,7 +313,7 @@ Error_Handler();
   /* USER CODE BEGIN 2 */
   printf("hello world\r\n");
   aiInit();
-  test_ai();
+  //test_ai();
 
   // start xclk for ov7670
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);

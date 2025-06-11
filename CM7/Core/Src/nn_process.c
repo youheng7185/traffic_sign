@@ -72,8 +72,7 @@ int aiRun(void) {
 		while(1);
 	}
 
-	while(1);
-	SCB_InvalidateDCache_by_Addr((uint32_t*)out_data, sizeof(out_data));
+	//SCB_InvalidateDCache_by_Addr((uint32_t*)out_data, sizeof(out_data));
 
 	return 0;
 }
