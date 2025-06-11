@@ -25,6 +25,7 @@
 #include "OV7670.h"
 #include <stdio.h>
 #include "nn_preprocess.h"
+#include "nn_process.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
