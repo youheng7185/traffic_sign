@@ -2311,44 +2311,44 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2025-06-11T10:47:07+0800",
+      "generated_time": "2025-06-11T11:27:57+0800",
       "model_files": [
         {
           "name": "network_data_params.h",
-          "signature": "0x65feea8e3e80b07e0ee1a9b4e6923ea2"
+          "signature": "0xd08a31206ac980380391064027addf7f"
         },
         {
           "name": "network_data_params.c",
-          "signature": "0x83c402f80fb66ff5da1c951f10dd5b7b"
+          "signature": "0x5bb4d0b8d1331dd71ad94bb02b972186"
         },
         {
           "name": "network_data.h",
-          "signature": "0x822dd2649a0fad2dd3c009a8965c9967"
+          "signature": "0xf4c9e1fe965a11c03bae2ffcfb32e5fa"
         },
         {
           "name": "network_data.c",
-          "signature": "0xdaacab779ad325933ea852ff06c22e10"
+          "signature": "0x83fad49bdc39a32aef0707a1069c4894"
         },
         {
           "name": "network_config.h",
-          "signature": "0x27347433ce8fd426ea1f98aa4189d944"
+          "signature": "0x48cbe68b9f03bba44995f649421df9e8"
         },
         {
           "name": "network.h",
-          "signature": "0x14d213744c6c1c01e387d0d08fd742bb"
+          "signature": "0x17d7aeee895a77f35b3e7e8d4ce8af46"
         },
         {
           "name": "network.c",
-          "signature": "0x811bc44f040b0ea50c31567a8aae2466"
+          "signature": "0x15a08cff6bd55ca145dc8e31bb70c0b3"
         }
       ],
       "name": "network"
     },
-    "network_signature": "0x469f4866273ecf80",
+    "network_signature": "0x35386fa281ec81c9",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name network -m C:/Users/lapchong/Downloads/quantized_gtsrb.tflite --compression none --verbosity 1 --workspace C:/Users/lapchong/AppData/Local/Temp/mxAI_workspace3500423873368001474156348409157561 --output C:/Users/lapchong/.stm32cubemx/network_output",
+        "arguments": "generate --target stm32h7 --name network -m C:/Users/lapchong/Downloads/quantized_gtsrb.tflite --compression none --verbosity 1 --workspace C:/Users/lapchong/AppData/Local/Temp/mxAI_workspace35248999736110010087230557937627178 --output C:/Users/lapchong/.stm32cubemx/network_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],

@@ -18,6 +18,9 @@ static ai_handle network = AI_HANDLE_NULL;
 static ai_buffer ai_input[AI_NETWORK_IN_NUM];
 static ai_buffer ai_output[AI_NETWORK_OUT_NUM];
 
+// shared buffer for both model
+uint8_t shared_buffer[3072];
+
 AI_ALIGNED(32)
 static ai_u8 activations[AI_NETWORK_DATA_ACTIVATIONS_SIZE];
 AI_ALIGNED(32)
@@ -26,8 +29,8 @@ AI_ALIGNED(32)
 static ai_u8 out_data[AI_NETWORK_OUT_1_SIZE];
 
 // func prototype for preprocess
-void convert_framebuffer_to_input(uint8_t in_data[AI_NETWORK_IN_1_SIZE]);
-void convert_framebuffer_to_input_correct(uint8_t *in_data);
+//void convert_framebuffer_to_input(uint8_t in_data[AI_NETWORK_IN_1_SIZE]);
+//void convert_framebuffer_to_input_correct(uint8_t *in_data);
 
 int aiInit(void) {
 	ai_error err;
@@ -56,7 +59,8 @@ int aiInit(void) {
 }
 
 int aiRun(void) {
-	convert_framebuffer_to_input_correct(in_data);
+
+	memcpy(in_data, shared_buffer, 3072);
 
 	ai_i32 n_batch;
 
@@ -96,8 +100,8 @@ static inline void rgb565_to_rgb888(uint16_t rgb565, uint8_t* r, uint8_t* g, uin
     *b |= *b >> 5;
 }
 
-void convert_framebuffer_to_input(uint8_t *in_data) {
-    const int scale_x = 240 / INPUT_WIDTH; // 7
+void convert_framebuffer_to_input_correct(const uint32_t *frame_buffer, uint8_t *in_data) {
+    const int scale_x = 240 / INPUT_WIDTH;  // 7
     const int scale_y = 240 / INPUT_HEIGHT; // 7
 
     for (int y = 0; y < INPUT_HEIGHT; ++y) {
@@ -118,33 +122,6 @@ void convert_framebuffer_to_input(uint8_t *in_data) {
             in_data[dst_index + 0] = r;
             in_data[dst_index + 1] = g;
             in_data[dst_index + 2] = b;
-        }
-    }
-}
-
-void convert_framebuffer_to_input_correct(uint8_t *in_data) {
-    const int scale_x = 240 / INPUT_WIDTH; // 7
-    const int scale_y = 240 / INPUT_HEIGHT; // 7
-
-    for (int y = 0; y < INPUT_HEIGHT; ++y) {
-        for (int x = 0; x < INPUT_WIDTH; ++x) {
-            int src_x = CROP_X_OFFSET + x * scale_x;
-            int src_y = CROP_Y_OFFSET + y * scale_y;
-            int pixel_index = src_y * OV7670_QVGA_WIDTH + src_x;
-            int word_index = pixel_index / 2;
-            int is_even = (pixel_index % 2 == 0);
-
-            uint32_t word = frame_buffer[word_index];
-            uint16_t rgb565 = is_even ? (word & 0xFFFF) : (word >> 16);
-
-            uint8_t r, g, b;
-            rgb565_to_rgb888(rgb565, &r, &g, &b);
-
-            int dst_index = (y * INPUT_WIDTH + x) * 3;
-            // Keep RGB order and 0-255 range as per your training
-            in_data[dst_index + 0] = r;  // Red
-            in_data[dst_index + 1] = g;  // Green
-            in_data[dst_index + 2] = b;  // Blue
         }
     }
 }

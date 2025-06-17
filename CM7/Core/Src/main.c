@@ -176,60 +176,6 @@ void OV7670_DisplayFrame(uint16_t x, uint16_t y) {
     ST7789_DrawImage(x, y, OV7670_QVGA_WIDTH, OV7670_QVGA_HEIGHT, rgb565_buffer);
 }
 
-HAL_StatusTypeDef ov7670_print_device_id(void)
-{
-    uint8_t id_high, id_low, manu_id;
-
-    printf("Reading OV7670 registers...\r\n");
-
-    // Read Product ID High
-    if(ov7670_read(0x0A, &id_high) != HAL_OK)
-    {
-        printf("Failed to read register 0x0A\r\n");
-        return HAL_ERROR;
-    }
-    printf("Register 0x0A (PID High): 0x%02X (%d)\r\n", id_high, id_high);
-
-    // Read Product ID Low
-    if(ov7670_read(0x0B, &id_low) != HAL_OK)
-    {
-        printf("Failed to read register 0x0B\r\n");
-        return HAL_ERROR;
-    }
-    printf("Register 0x0B (PID Low): 0x%02X (%d)\r\n", id_low, id_low);
-
-    // Read Manufacturer ID
-    if(ov7670_read(0x1C, &manu_id) != HAL_OK)
-    {
-        printf("Failed to read register 0x1C\r\n");
-        return HAL_ERROR;
-    }
-    printf("Register 0x1C (Manufacturer): 0x%02X (%d)\r\n", manu_id, manu_id);
-
-    printf("Combined Product ID: 0x%02X%02X\r\n", id_high, id_low);
-
-    return HAL_OK;
-}
-
-//void I2C_Scan_Bus(void) {
-//    HAL_StatusTypeDef result;
-//    uint8_t i;
-//    printf("Starting I2C scan on hi2c2...\r\n");
-//
-//    for (i = 1; i < 128; i++) {
-//        /*
-//         * The HAL_I2C_IsDeviceReady() function sends a START condition,
-//         * the 7-bit address (i << 1), and waits for ACK.
-//         */
-//        result = HAL_I2C_IsDeviceReady(&hi2c1, (i << 1), 1, 10);
-//        if (result == HAL_OK) {
-//            printf("Found device at 0x%02X\r\n", i);
-//        }
-//        HAL_Delay(1); // Small delay between checks
-//    }
-//
-//    printf("Scan complete.\r\n");
-//}
 uint32_t time_finish = 0;
 uint32_t diff;
 /* USER CODE END 0 */
@@ -315,8 +261,6 @@ Error_Handler();
   printf("hello world\r\n");
   aiInit();
   aiBinInit();
-  aiBinTestRun();
-  //test_ai();
 
   // start xclk for ov7670
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
@@ -352,16 +296,14 @@ Error_Handler();
 	  if(new_capture)
 	  {
 		  time_start = HAL_GetTick();
-		  //OV7670_DisplayFrame(0, 0);
-		  //new_capture = 0;
-
 
 		  pre_process_copy_buffer();
 		  display_192x192_frame();
-		  aiRun();
-		  time_finish = HAL_GetTick();
-		  //OV7670_DisplayFrame(0, 0);
+		  convert_framebuffer_to_input_correct(frame_buffer, shared_buffer);
 
+		  //aiRun();
+		  aiBinRun();
+		  time_finish = HAL_GetTick();
 
 		  diff = time_finish - time_start;
 		  sprintf(debug, "exe time: %dms, fps: %d", diff, (1000/diff));

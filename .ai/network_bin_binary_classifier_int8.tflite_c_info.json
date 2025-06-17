@@ -870,44 +870,44 @@
   ],
   "environment": {
     "generated_model": {
-      "generated_time": "2025-06-11T10:47:20+0800",
+      "generated_time": "2025-06-11T11:28:10+0800",
       "model_files": [
         {
           "name": "network_bin_data_params.h",
-          "signature": "0x8d6263594266435ecac5465cf5976304"
+          "signature": "0xfae968c10e27e1f14c673e8702ef40f2"
         },
         {
           "name": "network_bin_data_params.c",
-          "signature": "0x22253bb9894b1bec970e1b32693e19ec"
+          "signature": "0x22532827bcff9b9f702119edb6da9191"
         },
         {
           "name": "network_bin_data.h",
-          "signature": "0xca9230d89b53512134a9e67f1bae0689"
+          "signature": "0x105ba08610b4015de28d0a26003e46ef"
         },
         {
           "name": "network_bin_data.c",
-          "signature": "0xc649e639340ba6c477f85f967e73735c"
+          "signature": "0x866f882ac035c9dc3cafa7d1983e5819"
         },
         {
           "name": "network_bin_config.h",
-          "signature": "0x411164a949ac61fb2ebabfe685e0f9ce"
+          "signature": "0xbe6ba12cbc140ef11fb98725e83b0811"
         },
         {
           "name": "network_bin.h",
-          "signature": "0x707e72428c7dea944a154f4add0e9a25"
+          "signature": "0x0495410f1b2ce606dce4f7ab6703cc34"
         },
         {
           "name": "network_bin.c",
-          "signature": "0xa78fa5e21acd6580c24da9bf71c651cf"
+          "signature": "0x51aad2e3af22e4c89114f446b4039fdd"
         }
       ],
       "name": "network_bin"
     },
-    "network_signature": "0x2fd2006b42b34e2c",
+    "network_signature": "0x6745858fd3f1dc87",
     "test_name": "",
     "tools": [
       {
-        "arguments": "generate --target stm32h7 --name network_bin -m C:/Users/lapchong/Downloads/binary_classifier_int8.tflite --compression none --verbosity 1 --workspace C:/Users/lapchong/AppData/Local/Temp/mxAI_workspace35005598341340014723038959402900175 --output C:/Users/lapchong/.stm32cubemx/network_output",
+        "arguments": "generate --target stm32h7 --name network_bin -m C:/Users/lapchong/Downloads/binary_classifier_int8.tflite --compression none --verbosity 1 --workspace C:/Users/lapchong/AppData/Local/Temp/mxAI_workspace35250472691500013106616444645695888 --output C:/Users/lapchong/.stm32cubemx/network_output",
         "environment": [
           "STATS_TYPE=X-CUBE-AI"
         ],
