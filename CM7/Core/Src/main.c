@@ -301,8 +301,8 @@ Error_Handler();
 		  display_192x192_frame();
 		  convert_framebuffer_to_input_correct(frame_buffer, shared_buffer);
 
-		  //aiRun();
-		  aiBinRun();
+		  aiRun();
+		  //aiBinRun();
 		  time_finish = HAL_GetTick();
 
 		  diff = time_finish - time_start;
